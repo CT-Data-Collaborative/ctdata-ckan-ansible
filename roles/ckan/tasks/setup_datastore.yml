@@ -4,8 +4,8 @@
   template: src="datastore_user.j2" dest={{ datastore_permissions_file }}
 
 - name: Execute datastore permissions script
-  sudo: yes
-  sudo_user: postgres
+  become: yes
+  become_user: postgres
   command: psql -f {{ datastore_permissions_file }}
 
 #- name: delete datastore permissions script

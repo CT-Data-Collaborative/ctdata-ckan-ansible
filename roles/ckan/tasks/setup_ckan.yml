@@ -3,7 +3,7 @@
   pip: virtualenv={{ ckan_venv_path }} name='setuptools==36.1'
 
 - name: Install CKAN from Github
-  pip: virtualenv={{ ckan_venv_path }} name='git+https://github.com/ckan/ckan.git@{{ckan_version}}#egg=ckan'
+  pip: virtualenv={{ ckan_venv_path }} editable=yes name='git+https://github.com/ckan/ckan.git@{{ckan_version}}#egg=ckan'
 
 - name: Ensure that the application file permissions are correctly set
   file: path={{ ckan_venv_path }}
@@ -21,13 +21,13 @@
 #   tags:
 #       - deploy
 
-- name: Copy the theme specific requirements
-  template: src=requirements.j2 dest={{ ckan_venv_path }}/ckan_requirements.txt
-  tags:
-      - deploy
+# - name: Copy the theme specific requirements
+#   template: src=requirements.j2 dest={{ ckan_venv_path }}/ckan_requirements.txt
+#   tags:
+#       - deploy
 
 - name: Install the theme CKAN requirements
-  pip: virtualenv={{ ckan_venv_path }} requirements={{ ckan_venv_path }}/ckan_requirements.txt
+  pip: virtualenv={{ ckan_venv_path }} requirements={{ ckan_dir }}/requirements.txt
   tags:
       - deploy
 
@@ -40,6 +40,11 @@
 #  template: src=base.j2 dest={{ ckan_settings_path }}/development.ini
 #  tags:
 #      - deploy
+- name: Link the who.ini file
+  file:
+    src: '{{ ckan_dir }}/who.ini'
+    dest: '{{ ckan_settings_path }}/who.ini'
+    state: link
 
 - name: Copy the venv wrapper script
   template: src=ckan_venv_exec.j2 dest={{ ckan_dir }}/exec mode=755

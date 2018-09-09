@@ -1,4 +1,7 @@
 ---
+- name: Enable mod_header
+  apache2_module: state=present name=headers
+
 - name: Copy CKAN Apache Conf file
   template: src=ckan_conf.j2 dest=/etc/apache2/sites-available/ckan_default.conf
 
@@ -23,11 +26,8 @@
 - name: Remove default Apache conf file
   file: path=/etc/apache2/sites-enabled/000-default.conf state=absent
 
-- name: Enable mod_header
-  apache2_module: state=present name=headers
-
 - name: Start Jetty
-  service: name=jetty state=restarted
+  service: name=jetty8 state=restarted
 
 - name: Start Apache
   service: name=apache2 state=restarted

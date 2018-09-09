@@ -25,5 +25,5 @@ admin_users:
   scuerda:
     username: scuerda
     email: sasha.cuerda@gmail.com
-    password: test1
+    password: testpass
 
