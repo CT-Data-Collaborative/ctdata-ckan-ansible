@@ -1,0 +1,91 @@
+---
+
+- name: Make Directory for database dump files
+  file: path={{ local_dir_path }}/dumps owner={{ ckan_user }} state=directory
+
+- name: Copy dump files 1 of 3
+  unarchive: src={{ db_dump_dir }}/ckan_dump.tgz dest={{ local_dir_path}}/dumps owner={{ ckan_user }}
+
+- name: Copy dump files 2 of 3
+  unarchive: src={{ db_dump_dir }}/datastore_dump.tgz dest={{ local_dir_path}}/dumps owner={{ ckan_user }}
+
+- name: Copy dump files 3 of 3
+  unarchive: src={{ db_dump_dir }}/needed_files.tgz dest=/ owner=www-data
+
+# Drop and recreate database
+# Ckan Database
+- name: Drop main databse
+  sudo_user: postgres
+  postgresql_db: name={{ db_name }}
+                 state=absent
+
+- name: Ensure database is created
+  sudo_user: postgres
+  postgresql_db: name={{ db_name }}
+                 encoding='UTF-8'
+                 lc_collate='en_US.UTF-8'
+                 lc_ctype='en_US.UTF-8'
+                 template='template0'
+                 state=present
+
+
+- name: Ensure user has access to the database
+  sudo_user: postgres
+  postgresql_user: db={{ db_name }}
+                   name={{ db_user }}
+                   password={{ db_password }}
+                   priv=ALL
+                   state=present
+
+- name: Ensure user does not have unnecessary privileges
+  sudo_user: postgres
+  postgresql_user: name={{ db_user }}
+                   role_attr_flags=NOSUPERUSER,NOCREATEDB
+                   state=present
+
+- name: db_restore | Restore latest DB backup if backup file found
+  shell: PGPASSWORD={{ db_password }} psql -U {{ db_user }} -h localhost {{ db_name }} < {{ local_dir_path}}/dumps/ckan_ctdata.dump
+  ignore_errors: True
+
+# Datastore
+
+- name: Drop datastore databse
+  sudo_user: postgres
+  postgresql_db: name={{ ds_db_name }}
+                 state=absent
+
+- name: Ensure database is created
+  sudo_user: postgres
+  postgresql_db: name={{ ds_db_name }}
+                 encoding='UTF-8'
+                 lc_collate='en_US.UTF-8'
+                 lc_ctype='en_US.UTF-8'
+                 template='template0'
+                 state=present
+
+- name: Ensure user has access to the database
+  sudo_user: postgres
+  postgresql_user: db={{ ds_db_name }}
+                   name={{ ds_db_user }}
+                   password={{ ds_db_password }}
+                   priv=ALL
+                   state=present
+
+- name: Ensure user does not have unnecessary privileges
+  sudo_user: postgres
+  postgresql_user: name={{ ds_db_user }}
+                   role_attr_flags=NOSUPERUSER,NOCREATEDB
+                   state=present
+
+- name: Copy datastore permissions script
+  template: src="datastore_user.j2" dest={{ datastore_permissions_file }}
+
+- name: Execute datastore permissions script
+  sudo: yes
+  sudo_user: postgres
+  command: psql -f {{ datastore_permissions_file }}
+
+- name: datastore db_restore | Restore latest datastore db backup if backup file found
+  shell: PGPASSWORD={{ db_password }} psql -U {{ db_user }} -h localhost {{ ds_db_name }} < {{ local_dir_path}}/dumps/datastore_ctdata.dump
+  ignore_errors: True
+

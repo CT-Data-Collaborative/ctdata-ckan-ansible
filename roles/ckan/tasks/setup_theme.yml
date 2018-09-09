@@ -1,0 +1,29 @@
+---
+
+- name: Add extensions to CKAN production
+  lineinfile: 'dest={{ ckan_settings_path }}/production.ini  regexp="ckan.plugins =" line="ckan.plugins = stats pages text_view image_view recline_view recline_grid_view recline_graph_view recline_map_view datastore datapusher resource_proxy wmts_view wrcommon wrpages wrfacet geojson_view showcase disqus"'
+  tags: git
+
+- name: Updated default views
+  lineinfile: 'dest={{ ckan_settings_path }}/production.ini  regexp="ckan.views.default_views = image_view text_view recline_view" line="ckan.views.default_views = image_view text_view recline_view geojson_view"'
+  tags: git
+
+#- name: Enable tracking
+#  lineinfile: 'dest="{{ ckan_settings_path }}"/production.ini regexp="ckan.tracking_enabled" line="ckan.tracking_enabled = true"'
+#  tags: git
+
+#- name: Enable tracking
+#  lineinfile: 'dest={{ ckan_settings_path}}/development.ini' regexp='ckan.tracking_enabled'line="ckan.tracking_enabled = true"
+#  tags: git
+
+- name: Run Setup.py
+  command: chdir={{ project_path }} {{ python_path }}/python setup.py develop
+  tags: git
+  notify:
+    - Restart Apache
+    - Restart Nginx
+
+- name: Restart Apache
+  service: name=apache2 state=restarted
+  tags: git
+

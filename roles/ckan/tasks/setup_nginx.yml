@@ -1,0 +1,13 @@
+---
+
+- name: Copy Nginx File
+  template: src=nginx.j2 dest=/etc/nginx/sites-available/ckan_default
+
+- name: Symlink Nginx File
+  file: src=/etc/nginx/sites-available/ckan_default dest=/etc/nginx/sites-enabled/ckan_default state=link
+
+- name: Delete Default Nginx
+  file: path=/etc/nginx/sites-enabled/default state=absent
+
+- name: Start Nginx
+  service: name=nginx state=restarted

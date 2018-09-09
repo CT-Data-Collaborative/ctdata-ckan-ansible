@@ -1,0 +1,31 @@
+---
+
+# Core CKAN Settings
+ckan_venv_path: "/usr/lib/ckan/default"
+ckan_dir: "{{ ckan_venv_path }}/src/ckan"
+ckan_settings_path: "/etc/ckan/default"
+ckan_storage_path: "/var/lib/ckan/default"
+ckan_requirements: "{{ ckan_venv_path}}/src/ckan/requirements.txt"
+datastore_permissions_file: "{{ ckan_dir}}/ds_user.sql"
+
+# Datapusher Settings
+datapusher_venv_path: "/usr/lib/ckan/datapusher"
+datapusher_src_dir: "{{ datapusher_venv_path }}/src"
+datapusher_git_repo: "https://github.com/ckan/datapusher.git"
+datapusher_git_branch: "stable"
+datapusher_requirements: "{{ datapusher_src_dir }}/requirements.txt"
+
+# Solr and Jetty Vars
+solr_settings_path: "/etc/solr/conf"
+jetty_settings_path: "/etc/default"
+
+# Theme Vars
+local_dir_path: "/home/{{ ckan_user }}"
+project_path: "{{local_dir_path}}/theme"
+python_path: "/usr/lib/ckan/default/bin/"
+migration_path: "{{ project_path }}/ckanext/white-rock/migration"
+
+# CKAN Superuser Vars
+ckan_super_user_username: "{{ ckan_superuser }}"
+ckan_super_user_password: "{{ ckan_superuser_password }}"
+ckan_super_user_email: "{{ ckan_superuser_email }}"

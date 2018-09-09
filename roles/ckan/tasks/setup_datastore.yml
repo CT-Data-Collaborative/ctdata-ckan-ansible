@@ -1,0 +1,27 @@
+---
+
+- name: Copy datastore permissions script
+  template: src="datastore_user.j2" dest={{ datastore_permissions_file }}
+
+- name: Execute datastore permissions script
+  sudo: yes
+  sudo_user: postgres
+  command: psql -f {{ datastore_permissions_file }}
+
+#- name: delete datastore permissions script
+#  template: src="datastore_user.j2" dest={{ ckan_dir }}/ds_user.sql state=absent
+
+- name: Link Repoze.who configuration file for CKAN
+  file: 'path={{ ckan_settings_path }}/who.ini src={{ ckan_dir }}/who.ini state=link'
+
+# FileStore
+
+- name: Ensure FileStore directory exists
+  file: path={{ ckan_storage_path }} owner=www-data state=directory
+
+- name: Set FileStore directory path
+  lineinfile: 'dest=/etc/ckan/default/production.ini regexp="ckan.storage_path" line="ckan.storage_path = {{ ckan_storage_path }}"'
+
+- name: Ensure Apache can write to FileStore directory
+  acl: name={{ ckan_storage_path }} entity=www-data etype=user permissions="u+rwx"
+  notify: Start Apache

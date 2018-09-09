@@ -1,0 +1,67 @@
+---
+
+- name: Install base packages
+  apt: name={{ item }} update_cache={{ update_apt_cache }} force=yes state=installed
+  with_items:
+    - build-essential 
+    - python-dev
+    - postgresql
+    - libpq-dev
+    - python-pip
+    - python-virtualenv
+    - git-core
+    - solr-jetty
+    - openjdk-8-jdk
+    - redis-server
+  tags:
+      - configuration
+
+- name: Install server packages
+  apt: name={{ item }} update_cache={{ update_apt_cache }} force=yes state=installed
+  with_items:
+    - apache2
+    - apache2-utils
+    - libapache2-mod-wsgi
+    - libapache2-mod-rpaf
+    - fail2ban
+    - supervisor
+    - libxml2-dev
+    - libxslt1-dev
+    - libffi-dev 
+    - acl
+  tags:
+      - configuration
+
+- name: Stop Apache
+  service:
+    name: apache2
+    state: stopped
+
+- name: Install nginx
+  apt: name={{ item }} update_cache={{ update_apt_cache }} force=yes state=installed
+  with_items:
+    - nginx-core
+    - nginx
+
+- name: Install PyExpect
+  pip: name=pexpect
+
+- name: Enable passwordless sudo
+  lineinfile: 'dest=/etc/sudoers regexp="sudo ALL=NOPASSWD: ALL" line="%sudo ALL=NOPASSWD: ALL" state=present'
+  tags:
+      - configuration
+
+- name: Install virtualenv
+  pip: name=virtualenv
+  tags:
+      - configuration
+
+- name: Add user to adm group
+  user: name={{ ckan_user }} group=adm state=present
+  tags:
+      - configuration
+
+- name: Add user to root group
+  user: name={{ ckan_user }} group=root state=present
+  tags:
+      - configuration

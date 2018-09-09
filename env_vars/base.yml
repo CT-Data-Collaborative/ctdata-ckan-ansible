@@ -1,0 +1,29 @@
+---
+
+git_repo:
+
+project_name:
+application_name: 
+
+ckan_version: ckan-2.8.1
+
+# CKAN Database settings.
+db_user: ckan_default
+db_name: ckan_default
+db_password: ckan_default
+
+# Datastore Database settings
+ds_db_user: datastore_default
+ds_db_name: datastore_default
+ds_db_password: datastore
+
+
+ckan_setup_superuser_enable: true
+
+# Admin users to add
+admin_users:
+  scuerda:
+    username: scuerda
+    email: sasha.cuerda@gmail.com
+    password: test1
+

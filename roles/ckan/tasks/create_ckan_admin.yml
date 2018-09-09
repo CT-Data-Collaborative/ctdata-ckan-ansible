@@ -1,0 +1,31 @@
+
+- name: check if ckan user account for super user exists
+  command: "{{ ckan_venv_path }}/bin/paster --plugin ckan user search {{ item.value.username }} -c {{ ckan_settings_path }}/production.ini"
+  changed_when: False
+  when: ckan_setup_superuser_enable == true
+  with_dict: "{{ admin_users }}"
+  register: ckan_fact_ckan_super_user_account
+
+- debug: var=ckan_fact_ckan_super_user_account.results
+
+- name: setup lookup for super user check
+  set_fact:
+    superuser_exists: "{{ ckan_fact_ckan_super_user_account.results | makedict }}"
+
+- debug: var=superuser_exists
+
+- name: create ckan user account for super user
+  command: "{{ ckan_venv_path }}/bin/paster --plugin ckan user add {{ item.value.username }} email={{ item.value.email }} password={{ item.value.password }} -c {{ ckan_settings_path }}/production.ini"
+  when: ckan_setup_superuser_enable == true and "1 users matching" not in superuser_exists['{{ item.value.username }}']
+  with_dict: "{{ admin_users }}"
+
+- name: check if ckan user account for super user has system administrator privileges
+  command: "{{ ckan_venv_path }}/bin/paster --plugin ckan sysadmin list -c {{ ckan_settings_path }}/production.ini"
+  register: ckan_fact_ckan_super_user_privilages
+  changed_when: False
+  when: ckan_setup_superuser_enable == true
+
+- name: grant ckan user account for super user system administrator privileges
+  command: "{{ ckan_venv_path }}/bin/paster --plugin ckan sysadmin add {{ item.value.username }} -c {{ ckan_settings_path }}/production.ini"
+  when: ckan_setup_superuser_enable == true and "name={{ item.value.username }}" not in ckan_fact_ckan_super_user_privilages.stdout
+  with_dict: "{{ admin_users }}"

@@ -1,0 +1,211 @@
+#
+# CKAN - Pylons configuration
+#
+# These are some of the configuration options available for your CKAN
+# instance. Check the documentation in 'doc/configuration.rst' or at the
+# following URL for a description of what they do and the full list of
+# available options:
+#
+# http://docs.ckan.org/en/latest/configuration.html
+#
+# The %(here)s variable will be replaced with the parent directory of this file
+#
+
+[DEFAULT]
+
+# WARNING: *THIS SETTING MUST BE SET TO FALSE ON A PRODUCTION ENVIRONMENT*
+debug = false
+
+[server:main]
+use = egg:Paste#http
+host = 0.0.0.0
+port = 5000
+
+[app:main]
+#ofs.impl = pairtree
+#ofs.storage_dir = /var/lib/ckan/default
+ckan.storage_dir = /var/lib/ckan/default
+use = egg:ckan
+full_stack = true
+cache_dir = /tmp/%(ckan.site_id)s/
+beaker.session.key = ckan
+
+# This is the secret token that the beaker library uses to hash the cookie sent
+# to the client. `paster make-config` generates a unique value for this each
+# time it generates a config file.
+beaker.session.secret = qMD6JwW+8q1jbwctiM4Lp8Dey
+
+# `paster make-config` generates a unique value for this each time it generates
+# a config file.
+app_instance_uuid = {006fb4cf-87a7-49ea-a554-a216ea915431}
+
+# repoze.who config
+who.config_file = %(here)s/who.ini
+who.log_level = warning
+who.log_file = %(cache_dir)s/who_log.ini
+
+
+## Database Settings
+sqlalchemy.url = postgresql://{{ db_user }}:{{ db_password }}@localhost/{{ db_name }}
+ckan.datastore.write_url = postgresql://{{ db_user }}:{{ db_password }}@localhost/{{ ds_db_name }}
+ckan.datastore.read_url = postgresql://{{ ds_db_user }}:{{ ds_db_password }}@localhost/{{ ds_db_name }}
+
+
+## Site Settings
+ckan.site_url = {{ ckan_url }}
+
+## Authorization Settings
+## White Rock Specific
+ckan.auth.anon_create_dataset = false
+ckan.auth.create_unowned_dataset = true
+ckan.auth.create_dataset_if_not_in_organization = true
+ckan.auth.user_create_groups = true
+ckan.auth.user_create_organizations = true
+ckan.auth.user_delete_groups = true
+ckan.auth.user_delete_organizations = true
+ckan.auth.create_user_via_api = false
+ckan.auth.create_user_via_web = true
+ckan.auth.roles_that_cascade_to_sub_groups = admin
+
+
+## Search Settings
+
+ckan.site_id = ckanprod
+solr_url = http://127.0.0.1:8983/solr
+
+#ckan.simple_search = 1
+
+
+## Plugins Settings
+
+# Note: Add ``datastore`` to enable the CKAN DataStore
+#       Add ``datapusher`` to enable DataPusher
+#       Add ``pdf_preview`` to enable the resource preview for PDFs
+#		Add ``resource_proxy`` to enable resorce proxying and get around the
+#		same origin policy
+
+ckan.plugins = stats text_preview recline_preview
+
+# Resource Proxy Settings
+ckan.resource_proxy.max_file_size = 4194304
+
+ckan.spatial.srid = 4326
+ckanext.spatial.search_backend = solr
+ckan.datapusher.url = http://0.0.0.0:8801/
+ckan.tracking_enabled = true
+
+# Define which views should be created by default
+# (plugins must be loaded in ckan.plugins)
+ckan.views.default_views = image_view text_view recline_view
+
+## Theme Settings
+# ctdata.communities_source = f7e764bc-c2e3-48be-8469-be344486eae3
+
+## Disqus Settings
+disqus.name = ctdata
+
+# disqus.secret_key = {{ disqus_secret_key }}
+# disqus.public_key = {{ disqus_public_key }}
+
+## Front-End Settings
+ckan.site_title = CT Data
+ckan.site_logo = /images/logo-wr.jpg
+ckan.site_description = Open data portal of the city of White Rock
+ckan.favicon = /images/favicon.png
+ckan.gravatar_default = identicon
+ckan.preview.direct = png jpg gif
+ckan.preview.loadable = html htm rdf+xml owl+xml xml n3 n-triples turtle plain atom csv tsv rss txt json
+
+# package_hide_extras = for_search_index_only
+#package_edit_return_url = http://another.frontend/dataset/<NAME>
+#package_new_return_url = http://another.frontend/dataset/<NAME>
+#ckan.recaptcha.publickey =
+#ckan.recaptcha.privatekey =
+#licenses_group_url = http://licenses.opendefinition.org/licenses/groups/ckan.json
+# ckan.template_footer_end =
+
+
+## Internationalisation Settings
+ckan.locale_default = en
+ckan.locale_order = en pt_BR ja it cs_CZ ca es fr el sv sr sr@latin no sk fi ru de pl nl bg ko_KR hu sa sl lv
+ckan.locales_offered =
+ckan.locales_filtered_out = en_GB
+
+
+## Feeds Settings
+
+ckan.feeds.authority_name = City of White Rock
+ckan.feeds.date = 2014-06-01
+ckan.feeds.author_name = City of White Rock
+ckan.feeds.author_link = http://data.whiterockcity.ca
+
+## Storage Settings
+
+ckan.storage_path = /var/lib/ckan/default
+ckan.max_resource_size = 1000
+#ckan.max_image_size = 2
+
+## Datapusher settings
+
+# Make sure you have set up the DataStore
+
+#ckan.datapusher.formats =
+ckan.datapusher.url = http://0.0.0.0:8800/
+
+## Activity Streams Settings
+
+#ckan.activity_streams_enabled = true
+#ckan.activity_list_limit = 31
+#ckan.activity_streams_email_notifications = true
+# ckan.email_notifications_since = 2 days
+
+
+## Email settings
+
+email_to = sasha.cuerda@gmail.com
+error_email_from =  open_data_portal@whiterockcity.ca
+smtp.server = localhost
+smtp.starttls = False
+# smtp.user = your_username@gmail.com
+# smtp.password = your_password
+smtp.mail_from = open_data_portal@whiterockcity.ca
+
+
+
+## Logging configuration
+[loggers]
+keys = root, ckan, ckanext
+
+[handlers]
+keys = console
+
+[formatters]
+keys = generic
+
+[logger_root]
+level = WARNING
+handlers = console
+
+[logger_ckan]
+level = INFO
+handlers = console
+qualname = ckan
+propagate = 0
+
+[logger_ckanext]
+level = DEBUG
+handlers = console
+qualname = ckanext
+propagate = 0
+
+[handler_console]
+class = StreamHandler
+args = (sys.stderr,)
+level = NOTSET
+formatter = generic
+
+[formatter_generic]
+format = %(asctime)s %(levelname)-5.5s [%(name)s] %(message)s
+
+# Settings for Webhooks
+ckanext.webhooks.minimum_auth = sysadmin

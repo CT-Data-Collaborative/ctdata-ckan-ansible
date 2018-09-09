@@ -1,0 +1,31 @@
+<VirtualHost 0.0.0.0:8080>
+	ServerName {{ ckan_url }}
+	WSGIScriptAlias	/ {{ ckan_settings_path }}/apache.wsgi
+
+	# Pass authorization info on (needed for rest api)
+	WSGIPassAuthorization On
+
+	# Deploy as a daemon (avoids conflicts between CKAN instances)
+	WSGIDaemonProcess ckan_default display-name=ckan_default processes=2 threads=15
+
+	#python-path={{ ckan_venv_path }}/lib/python2.7/site-packages
+
+	WSGIProcessGroup ckan_default
+
+	ErrorLog /var/log/apache2/ckan_default.error.log
+	CustomLog /var/log/apache2/ckan_default.custom.log combined
+    Header set Access-Control-Allow-Origin "*"
+
+	<IfModule mod_rpaf.c>
+		RPAFenable On
+		RPAFsethostname on
+		RPAFprox_ips 127.0.0.1
+	</IfModule>
+</VirtualHost>
+
+<Directory {{ ckan_settings_path }}>
+        Order allow,deny
+        Allow from all
+        Require all granted
+        Satisfy Any
+</Directory>

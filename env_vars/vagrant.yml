@@ -1,0 +1,13 @@
+---
+
+# Git settings.
+setup_git_repo: no
+local_mount: yes
+git_branch: master
+load_db: no
+# Nginx settings.
+#nginx_server_name: 192.168.33.15
+
+# Application settings.
+ckan_user: vagrant
+ckan_url: 

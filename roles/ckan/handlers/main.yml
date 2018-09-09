@@ -1,0 +1,18 @@
+---
+- name: Start Apache
+  service: name=apache2 state=started
+
+- name: Start Nginx
+  service: name=nginx state=started
+
+- name: Start Jetty
+  service: name=jetty state=started
+
+- name: Restart Jetty
+  service: name=jetty state=restarted
+
+- name: Restart Apache
+  service: name=apache2 state=restarted
+
+- name: Restart Nginx
+  service: name=nginx state=restarted

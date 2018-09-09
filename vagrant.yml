@@ -1,0 +1,24 @@
+---
+- hosts: all
+  gather_facts: False  
+  become: yes
+  tasks:
+  - name: install python 2
+    raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+
+- name: Create a {{ application_name }} virtual machine serving CKAN via vagrant
+  hosts: all
+  become: yes
+  remote_user: vagrant
+  vars:
+    - setup_git_repo: no
+    - update_apt_cache: yes
+  vars_files:
+    - env_vars/base.yml
+    - env_vars/vagrant.yml
+
+  roles:
+    - base
+    - postfix
+    - db
+    - ckan

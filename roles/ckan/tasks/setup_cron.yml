@@ -1,0 +1,3 @@
+- cron: name="Tracking Update" state=present user={{ ckan_user }} special_time=hourly job="/usr/lib/ckan/default/bin/paster --plugin=ckan tracking update -c /etc/ckan/default/production.ini > /dev/null"
+
+- cron: name="Search Index Rebuilt" state=present user={{ ckan_user }} special_time=hourly job=" /usr/lib/ckan/default/bin/paster --plugin=ckan search-index rebuild -r -c /etc/ckan/default/production.ini > /dev/null"

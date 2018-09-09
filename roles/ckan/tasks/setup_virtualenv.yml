@@ -1,0 +1,17 @@
+---
+
+- name: Create ckan directory
+  file: path={{ ckan_venv_path }} state=directory
+        owner={{ ckan_user }}
+
+- name: Create the ckan virtualenv
+  command: virtualenv {{ ckan_venv_path }} --no-site-packages
+           creates={{ ckan_venv_path }}/bin/activate
+
+- name: Create datapusher directory
+  file: path={{ datapusher_venv_path }} state=directory
+        owner={{ ckan_user }}
+
+- name: Create the datapusher virtualenv
+  command: virtualenv {{ datapusher_venv_path }}
+           creates={{ datapusher_venv_path }}/bin/activate

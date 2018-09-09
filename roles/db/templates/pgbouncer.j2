@@ -1,0 +1,30 @@
+[databases]
+ckan_default = host=127.0.0.1 port=5432 dbname={{ db_name}} user={{ db_user }} password={{ db_password }}
+
+[pgbouncer]
+logfile = /var/log/postgresql/pgbouncer.log
+pidfile = /var/run/postgresql/pgbouncer.pid
+listen_addr = 127.0.0.1
+listen_port = 6432
+unix_socket_dir = /var/run/postgresql
+auth_type = any
+auth_file = /usr/local/postgres/userlist.txt
+admin_users = postgres
+stats_users = stats, root
+pool_mode = transaction
+server_reset_query =
+server_check_query = select 1
+server_check_delay = 10
+max_client_conn = 500
+default_pool_size = 50
+log_connections = 1
+log_disconnections = 1
+log_pooler_errors = 1
+server_idle_timeout = 20
+#
+idle_transaction_timeout = 180
+#
+client_login_timeout = 30
+tcp_keepalive = 1
+tcp_keepidle = 300
+tcp_keepintvl = 60

@@ -1,0 +1,112 @@
+---
+
+- name: Install PostgreSQL
+  apt: name={{ item }} update_cache={{ update_apt_cache }} state=installed
+  with_items:
+    - postgresql
+    - postgresql-contrib
+    - python-psycopg2
+    - pgbouncer
+  tags:
+      - configuration
+      - packages
+
+
+- name: Ensure the PostgreSQL service is running
+  service: name=postgresql state=started enabled=yes
+
+# Ckan Database
+- name: Ensure database is created
+  become: true
+  become_user: postgres
+  postgresql_db: name={{ db_name }}
+                 encoding='UTF-8'
+                 lc_collate='en_US.UTF-8'
+                 lc_ctype='en_US.UTF-8'
+                 template='template0'
+                 state=present
+  tags:
+      - configuration
+
+
+- name: Ensure user has access to the database
+  become: true
+  become_user: postgres
+  postgresql_user: db={{ db_name }}
+                   name={{ db_user }}
+                   password={{ db_password }}
+                   priv=ALL
+                   state=present
+  tags:
+      - configuration
+
+
+- name: Ensure user does not have unnecessary privileges
+  become: true
+  become_user: postgres
+  postgresql_user: name={{ db_user }}
+                   role_attr_flags=NOSUPERUSER,NOCREATEDB
+                   state=present
+  tags:
+      - configuration
+
+
+# Datastore Database
+- name: Ensure database is created
+  become: true
+  become_user: postgres
+  postgresql_db: name={{ ds_db_name }}
+                 encoding='UTF-8'
+                 lc_collate='en_US.UTF-8'
+                 lc_ctype='en_US.UTF-8'
+                 template='template0'
+                 state=present
+  tags:
+      - configuration
+
+
+- name: Ensure user has access to the database
+  become: true
+  become_user: postgres
+  postgresql_user: db={{ ds_db_name }}
+                   name={{ ds_db_user }}
+                   password={{ ds_db_password }}
+                   priv=ALL
+                   state=present
+  tags:
+      - configuration
+
+
+- name: Ensure user does not have unnecessary privileges
+  become: true
+  become_user: postgres
+  postgresql_user: name={{ ds_db_user }}
+                   role_attr_flags=NOSUPERUSER,NOCREATEDB
+                   state=present
+  tags:
+      - configuration
+
+
+- name: Copy pgbouncer config file
+  template: src=pgbouncer.j2 dest=/etc/pgbouncer/pgbouncer.ini
+  tags:
+      - configuration
+
+
+- name: Copy pgbouncer userlist file
+  template: src=userlist.j2 dest=/etc/pgbouncer/userlist.ini
+  tags:
+      - configuration
+
+
+- name: Make sure pgbouncer starts on reboot
+  lineinfile: dest=/etc/default/pgbouncer regexp="START=0" line="START=1"
+  tags:
+      - configuration
+
+
+- name: Start pgbouncer
+  service: name=pgbouncer state=restarted
+  tags:
+      - configuration
+

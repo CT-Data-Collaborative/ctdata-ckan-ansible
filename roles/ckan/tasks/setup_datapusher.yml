@@ -1,0 +1,28 @@
+---
+
+- name: Create datapusher directory
+  file: path={{ datapusher_src_dir }} state=directory
+
+- name: Ensure that the settings file directory is present
+  file: path={{ ckan_settings_path }}
+        state=directory
+
+- name: Clone Datapusher from Github
+  git: repo={{ datapusher_git_repo }}
+       version={{ datapusher_git_branch }}
+       dest={{ datapusher_src_dir }}
+  tags: git
+
+- name: Install the CKAN requirements
+  pip: virtualenv={{ datapusher_venv_path }} requirements={{ datapusher_requirements }}
+  register: datapusher_installed
+
+- name: Install Datapusher
+  shell: chdir={{ datapusher_src_dir }} {{ datapusher_venv_path }}/bin/python setup.py develop
+
+- name: Move Datapush WSGI
+  shell: cp {{ datapusher_src_dir }}/deployment/datapusher.wsgi /etc/ckan/datapusher.wsgi
+
+- name: Move Datapush settings
+  shell: cp {{ datapusher_src_dir }}/deployment/datapusher_settings.py /etc/ckan/datapusher_settings.py
+

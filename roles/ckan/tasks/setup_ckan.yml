@@ -1,0 +1,60 @@
+---
+- name: Install the recommended version of setuptools
+  pip: virtualenv={{ ckan_venv_path }} name='setuptools==36.1'
+
+- name: Install CKAN from Github
+  pip: virtualenv={{ ckan_venv_path }} name='git+https://github.com/ckan/ckan.git@{{ckan_version}}#egg=ckan'
+
+- name: Ensure that the application file permissions are correctly set
+  file: path={{ ckan_venv_path }}
+        recurse=yes
+        owner={{ ckan_user }}
+        state=directory
+
+- name: Ensure that the settings file directory is present
+  file: path={{ ckan_settings_path }}
+        state=directory
+
+# - name: Install the CKAN requirements
+#   pip: virtualenv={{ ckan_venv_path }} requirements={{ ckan_requirements }}
+#   register: ckan_installed
+#   tags:
+#       - deploy
+
+- name: Copy the theme specific requirements
+  template: src=requirements.j2 dest={{ ckan_venv_path }}/ckan_requirements.txt
+  tags:
+      - deploy
+
+- name: Install the theme CKAN requirements
+  pip: virtualenv={{ ckan_venv_path }} requirements={{ ckan_venv_path }}/ckan_requirements.txt
+  tags:
+      - deploy
+
+- name: Copy the initial production ini file
+  template: src=base.j2 dest={{ ckan_settings_path }}/production.ini
+  tags:
+      - deploy
+
+#- name: Copy the initial development ini file
+#  template: src=base.j2 dest={{ ckan_settings_path }}/development.ini
+#  tags:
+#      - deploy
+
+- name: Copy the venv wrapper script
+  template: src=ckan_venv_exec.j2 dest={{ ckan_dir }}/exec mode=755
+
+- name: Initialize Database
+  command: chdir={{ ckan_dir }} {{ ckan_venv_path }}/bin/paster db init -c {{ ckan_settings_path }}/production.ini
+
+- name: Move WSGI file
+  template: src=ckanwsgi.j2 dest={{ ckan_settings_path }}/apache.wsgi
+
+- name: Ensure Apache WSGI file permissions are set correctly
+  acl: name={{ ckan_settings_path }}/apache.wsgi entity={{ ckan_user }} etype=user permissions="ugo+x"
+
+- name: Ensure that the application file permissions are correctly set
+  file: path=/etc/ckan
+        recurse=yes
+        owner={{ ckan_user }}
+        state=directory

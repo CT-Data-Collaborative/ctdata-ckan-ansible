@@ -1,0 +1,10 @@
+---
+
+- name: upgrade database
+  command: chdir={{ ckan_dir }} {{ ckan_venv_path }}/bin/paster db upgrade -c {{ ckan_settings_path }}/development.ini
+
+- name: rebuild index
+  command: chdir={{ ckan_dir }} {{ ckan_venv_path }}/bin/paster search-index rebuild -c {{ ckan_settings_path }}/development.ini
+
+- name: build views
+  command: chdir={{ ckan_dir }} {{ ckan_venv_path }}/bin/paster views create -y -c {{ ckan_settings_path }}/development.ini

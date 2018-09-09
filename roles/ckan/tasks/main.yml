@@ -1,0 +1,51 @@
+---
+
+- include: setup_virtualenv.yml
+  tags:
+    - configuration
+
+- include: setup_ckan.yml
+  tags:
+      - configuration
+
+- include: setup_solr.yml
+  tags:
+      - configuration
+
+- include: setup_datastore.yml
+  tags:
+      - configuration
+
+- include: setup_datapusher.yml
+  tags:
+      - configuration
+
+# - include: setup_git_repo.yml
+#   tags:
+#       - configuration
+#       - deploy
+#   when: setup_git_repo
+
+- include: create_ckan_admin.yml
+
+- include: setup_apache.yml
+  tags:
+      - configuration
+
+# - include: load_database.yml
+#   tags:
+#       - configuration
+#       - database
+#   when: load_db
+
+# - include: setup_theme.yml
+#   tags:
+#       - configuration
+#       - deploy
+#   notify: Restart Apache
+
+- include: setup_cron.yml
+
+- include: setup_nginx.yml
+  tags:
+      - configuration

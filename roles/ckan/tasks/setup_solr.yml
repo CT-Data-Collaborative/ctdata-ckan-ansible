@@ -1,0 +1,18 @@
+---
+
+ # Jetty & Solr
+- name: Remove default Jetty File
+  file: path={{ jetty_settings_path}}/jetty state=absent
+
+- name: Copy Jetty File
+  template: src=jetty.j2 dest={{ jetty_settings_path }}/jetty
+
+- name: Remove CKAN schema file
+  file: path={{ solr_settings_path }}/schema.xml state=absent
+
+- name: Ensure CKAN uses provided schema file
+  file: path={{ solr_settings_path }}/schema.xml src=/usr/lib/ckan/default/src/ckan/ckan/config/solr/schema.xml state=link
+
+- name: Set CKAN Solr server address
+  lineinfile: 'dest={{ ckan_settings_path }}/production.ini regexp=solr_url line=solr_url=http://127.0.0.1:8983/solr'
+
