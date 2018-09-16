@@ -5,7 +5,7 @@
   file: path={{ jetty_settings_path}}/jetty state=absent
 
 - name: Copy Jetty File
-  template: src=jetty.j2 dest={{ jetty_settings_path }}/jetty
+  template: src=jetty.j2 dest={{ jetty_settings_path }}/jetty8
 
 - name: Remove CKAN schema file
   file: path={{ solr_settings_path }}/schema.xml state=absent
