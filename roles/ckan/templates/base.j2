@@ -55,7 +55,6 @@ ckan.datastore.read_url = postgresql://{{ ds_db_user }}:{{ ds_db_password }}@loc
 ckan.site_url = {{ ckan_url }}
 
 ## Authorization Settings
-## White Rock Specific
 ckan.auth.anon_create_dataset = false
 ckan.auth.create_unowned_dataset = true
 ckan.auth.create_dataset_if_not_in_organization = true
@@ -104,7 +103,7 @@ ckan.views.default_views = image_view text_view recline_view
 
 ## Front-End Settings
 ckan.site_title = CT Data
-ckan.site_logo = /images/logo-wr.jpg
+ckan.site_logo = /base/images/logo-ctdata.jpg
 ckan.site_description = Connecticut Data Collaborative Open Data Portal
 ckan.favicon = /images/favicon.png
 ckan.gravatar_default = identicon
@@ -150,7 +149,7 @@ ckan.datapusher.url = http://0.0.0.0:8800/
 
 ## Email settings
 
-email_to = sasha.cuerda@gmail.com
+email_to = info@ctdata.org
 error_email_from = info@ctdata.org
 smtp.server = localhost
 smtp.starttls = False

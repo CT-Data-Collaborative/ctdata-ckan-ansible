@@ -15,12 +15,6 @@
   file: path={{ ckan_settings_path }}
         state=directory
 
-# - name: Install the CKAN requirements
-#   pip: virtualenv={{ ckan_venv_path }} requirements={{ ckan_requirements }}
-#   register: ckan_installed
-#   tags:
-#       - deploy
-
 # - name: Copy the theme specific requirements
 #   template: src=requirements.j2 dest={{ ckan_venv_path }}/ckan_requirements.txt
 #   tags:
@@ -36,10 +30,6 @@
   tags:
       - deploy
 
-#- name: Copy the initial development ini file
-#  template: src=base.j2 dest={{ ckan_settings_path }}/development.ini
-#  tags:
-#      - deploy
 - name: Link the who.ini file
   file:
     src: '{{ ckan_dir }}/who.ini'
@@ -63,3 +53,9 @@
         recurse=yes
         owner={{ ckan_user }}
         state=directory
+
+- name: Copy Logo
+  copy:
+    src: "{{ role_path }}/files/logo-ctdata.jpg"
+    dest: "{{ ckan_dir }}/ckan/public/base/images/logo-ctdata.jpg"
+    owner: "{{ ckan_user }}"

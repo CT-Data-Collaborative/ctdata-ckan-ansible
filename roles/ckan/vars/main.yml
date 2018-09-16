@@ -23,7 +23,6 @@ jetty_settings_path: "/etc/default"
 local_dir_path: "/home/{{ ckan_user }}"
 project_path: "{{local_dir_path}}/theme"
 python_path: "/usr/lib/ckan/default/bin/"
-migration_path: "{{ project_path }}/ckanext/white-rock/migration"
 
 # CKAN Superuser Vars
 ckan_super_user_username: "{{ ckan_superuser }}"
