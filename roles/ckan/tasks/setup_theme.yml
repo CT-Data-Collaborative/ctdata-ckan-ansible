@@ -1,7 +1,7 @@
 ---
 
 - name: Add extensions to CKAN production
-  lineinfile: 'dest={{ ckan_settings_path }}/production.ini  regexp="ckan.plugins =" line="ckan.plugins = stats pages text_view image_view recline_view recline_grid_view recline_graph_view recline_map_view datastore datapusher resource_proxy wmts_view wrcommon wrpages wrfacet geojson_view showcase disqus"'
+  lineinfile: 'dest={{ ckan_settings_path }}/production.ini  regexp="ckan.plugins =" line="ckan.plugins = stats pages text_view image_view recline_view recline_grid_view recline_graph_view recline_map_view datastore datapusher resource_proxy geojson_view showcase"'
   tags: git
 
 - name: Updated default views
