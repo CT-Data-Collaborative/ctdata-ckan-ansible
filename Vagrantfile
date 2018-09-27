@@ -9,7 +9,8 @@ Vagrant.configure(2) do |config|
   # config.vm.provider :virtualbox do |vb|
   #   vb.customize ["modifyvm", :id, "--name", "ckan", "--memory", "2048"]
   # end
-  # Provide an absolute path to the ckan extension directory that is being developed. 
+  # First arguments is relative or absolute path to local theme directory. Second argument needs to be
+  # /home/vagrant/theme for ansible to work correctly
   config.vm.synced_folder "../ctdata-ckan-theme-v2", "/home/vagrant/theme"
   config.ssh.forward_agent = true
 
