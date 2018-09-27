@@ -15,11 +15,6 @@
   file: path={{ ckan_settings_path }}
         state=directory
 
-# - name: Copy the theme specific requirements
-#   template: src=requirements.j2 dest={{ ckan_venv_path }}/ckan_requirements.txt
-#   tags:
-#       - deploy
-
 - name: Install the theme CKAN requirements
   pip: virtualenv={{ ckan_venv_path }} requirements={{ ckan_dir }}/requirements.txt
   tags:

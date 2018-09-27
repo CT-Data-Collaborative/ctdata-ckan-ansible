@@ -38,11 +38,11 @@
 #       - database
 #   when: load_db
 
-# - include: setup_theme.yml
-#   tags:
-#       - configuration
-#       - deploy
-#   notify: Restart Apache
+- include: setup_theme.yml
+  tags:
+      - configuration
+      - deploy
+  notify: Restart Apache
 
 - include: setup_cron.yml
 
