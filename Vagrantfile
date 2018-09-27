@@ -10,7 +10,7 @@ Vagrant.configure(2) do |config|
   #   vb.customize ["modifyvm", :id, "--name", "ckan", "--memory", "2048"]
   # end
   # Provide an absolute path to the ckan extension directory that is being developed. 
-  #config.vm.synced_folder "", "/home/vagrant/theme"
+  config.vm.synced_folder "../ctdata-ckan-theme-v2", "/home/vagrant/theme"
   config.ssh.forward_agent = true
 
 
