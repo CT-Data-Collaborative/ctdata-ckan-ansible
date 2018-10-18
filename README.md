@@ -58,3 +58,11 @@ You should then be able to to run the ansible command:
 `ansible-playbook servers.yml`
 
 You shouldn't see failures, but if you do, follow the error messages and make the necessary changes.
+
+### Making configuration changes.
+
+There are number of things that you can customize in this playbook. In the `env_vars/base.yml` you can set the ckan version, change the repo for the theme, and define the admin user that should be set up by default.
+
+In the `env_vars/ec2.yml` you can configure the url that the ckan instance will be served from.
+
+If you want to make the theme a private repo, you will need to change the way that the them is cloned on to the machine. You will need to edit the `roles/ckan/tasks/setup_git_repo.yml`, uncomment and update the commands that copy public and private keys to the server, and change the `Setup the Git repo` command to do an ssh-based clone.
