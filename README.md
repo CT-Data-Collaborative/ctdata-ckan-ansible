@@ -68,3 +68,5 @@ There are number of things that you can customize in this playbook. In the `env_
 In the `env_vars/ec2.yml` you can configure the url that the ckan instance will be served from.
 
 If you want to make the theme a private repo, you will need to change the way that the them is cloned on to the machine. You will need to edit the `roles/ckan/tasks/setup_git_repo.yml`, uncomment and update the commands that copy public and private keys to the server, and change the `Setup the Git repo` command to do an ssh-based clone.
+
+You may also want to change the nginx and apache settings to expose the application on the desired port. Currently the applicaiton will be exposed on ports 80 and 8080, but you may want to change that. The nginx template is at `roles/ckan/templates/nginx.j2`. The apache template is at `roles/ckan/templates/ckan_conf.j2` 
