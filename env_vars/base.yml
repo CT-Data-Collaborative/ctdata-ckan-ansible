@@ -1,7 +1,6 @@
 ---
 
-git_repo:
-
+git_repo: https://github.com/CT-Data-Collaborative/ctdata-ckan-theme-v2.git
 project_name:
 application_name: 
 

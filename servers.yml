@@ -1,0 +1,22 @@
+- name: Provision an {{ env }} Server with {{ application_name }} Install
+  hosts: servers
+  gather_facts: False
+  become: yes
+  tasks:
+  - name: install python 2
+    raw: test -e /user/bin/python || (apt -y update && apt install -y python-minimal)
+
+- name: setup ckan
+  hosts: servers
+  become: yes
+  remote_user: ubuntu
+  vars:
+    - setup_git_repo: yes
+    - update_apt_cache: yes
+  vars_files:
+    - env_vars/base.yml
+    - env_vars/ec2.yml
+  roles:
+    - base
+    - db
+    - ckan

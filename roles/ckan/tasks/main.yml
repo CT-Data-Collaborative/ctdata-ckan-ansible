@@ -20,11 +20,11 @@
   tags:
       - configuration
 
-# - include: setup_git_repo.yml
-#   tags:
-#       - configuration
-#       - deploy
-#   when: setup_git_repo
+- include: setup_git_repo.yml
+  tags:
+      - configuration
+      - deploy
+  when: setup_git_repo
 
 - include: create_ckan_admin.yml
 

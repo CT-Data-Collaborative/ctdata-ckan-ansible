@@ -1,0 +1,14 @@
+---
+env: ec2
+application_name: ckan
+
+# Git settings.
+setup_git_repo: yes
+git_branch: master
+
+# Nginx settings.
+# nginx_server_name: 192.168.33.15
+
+# Application settings.
+ckan_user: ubuntu
+ckan_url: "http://betadata.ctdata.org"

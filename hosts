@@ -1,3 +1,5 @@
 [vagrant]
 192.168.33.15
 
+[servers]
+ckan

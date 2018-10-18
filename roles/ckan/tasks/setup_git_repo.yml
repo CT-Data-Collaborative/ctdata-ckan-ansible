@@ -9,7 +9,7 @@
 - name: Create the Github SSH public key file
   copy: src="~/.ssh/ansibleid.pub"
         dest="/home/{{ ckan_user }}/.ssh/id_rsa.pub"
-        mode=0644
+        mode=0600
         owner={{ ckan_user }}
   when: setup_git_repo
 
@@ -21,13 +21,12 @@
   when: setup_git_repo
 
 - name: Setup the Git repo
-  sudo: no
   git: repo={{ git_repo }}
        version={{ git_branch }}
        dest={{ project_path }}
-       accept_hostkey=True
-       force=yes
-       key_file="/home/{{ ckan_user}}/.ssh/id_rsa"
+       # accept_hostkey=True
+       # force=yes
+       # key_file="/home/{{ ckan_user}}/.ssh/id_rsa"
   when: setup_git_repo is defined and setup_git_repo
   tags: git
 
