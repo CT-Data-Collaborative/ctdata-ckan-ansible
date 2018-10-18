@@ -35,6 +35,8 @@ When it comes to attach storage, you can select what you think you need. 20gb is
 
 Select which pem you want to use, you can use the ckanv2 pem if you have it, or you can create a new one.
 
+Finally, select a security group that exposes the correct ports. launch-group-1 exposes enough to support the application, but may be too permissive depending on your concerns.
+
 ### Local Configuration
 
 in your `~/.ssh/config`, add an entry for the ckan server, give it an alias name, point it to the IP address of the new ec2 instances, and give a path to the PEM file you downloaded.
